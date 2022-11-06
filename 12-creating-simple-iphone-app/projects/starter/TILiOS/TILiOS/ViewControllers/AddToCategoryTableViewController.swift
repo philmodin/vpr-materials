@@ -24,6 +24,19 @@ class AddToCategoryTableViewController: UITableViewController {
   }
 
   func loadData() {
+		let categoriesRequest = ResourceRequest<Category>(resourcePath: "categories")
+		categoriesRequest.getAll { [weak self] result in
+			switch result {
+			case .failure:
+				let message = "There was an error getting the categories"
+				ErrorPresenter.showError(message: message, on: self)
+			case .success(let categories):
+				self?.categories = categories
+				DispatchQueue.main.async { [weak self] in
+					self?.tableView.reloadData()
+				}
+			}
+		}
   }
 }
 
@@ -49,4 +62,30 @@ extension AddToCategoryTableViewController {
 
     return cell
   }
+}
+
+// MARK: - UITableViewDelegate
+extension AddToCategoryTableViewController {
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let category = categories[indexPath.row]
+		guard let acronymID = acronym.id else {
+			let message = """
+				There wwas an error adding the acronym to the cateogry - the acronym has no ID
+			"""
+			ErrorPresenter.showError(message: message, on: self)
+			return
+		}
+		let acronymRequest = AcronymRequest(acronymID: acronymID)
+		acronymRequest.add(category: category) { [weak self] result in
+			switch result {
+			case .success:
+				DispatchQueue.main.async { [weak self] in
+					self?.navigationController?.popViewController(animated: true)
+				}
+			case .failure:
+				let message = "There was an error adding the acronym to the category"
+				ErrorPresenter.showError(message: message, on: self)
+			}
+		}
+	}
 }

@@ -66,4 +66,29 @@ struct AcronymRequest {
 			completion(.failure(.encodingError))
 		}
 	}
+	
+	func delete() {
+		var urlRequest = URLRequest(url: resource)
+		urlRequest.httpMethod = "DELETE"
+		let dataTask = URLSession.shared.dataTask(with: urlRequest)
+		dataTask.resume()
+	}
+	
+	func add(category: Category, completion: @escaping(Result<Void, CategoryAddError>) -> Void) {
+		guard let categoryID = category.id else {
+			completion(.failure(.noID))
+			return
+		}
+		let url = resource.appendingPathComponent("categories").appendingPathComponent("\(categoryID)")
+		var urlRequest = URLRequest(url: url)
+		urlRequest.httpMethod = "POST"
+		let dataTask = URLSession.shared.dataTask(with: urlRequest) { _, response, _ in
+			guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+				completion(.failure(.invalidResponse))
+				return
+			}
+			completion(.success(()))
+		}
+		dataTask.resume()
+	}
 }
