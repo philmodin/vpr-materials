@@ -27,6 +27,8 @@
 		D2A5F2091F4A9144005CD714 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2A5F2071F4A9144005CD714 /* Main.storyboard */; };
 		D2A5F20B1F4A9144005CD714 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2A5F20A1F4A9144005CD714 /* Assets.xcassets */; };
 		D2A5F2211F4A96D0005CD714 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A5F2201F4A96D0005CD714 /* AppDelegate.swift */; };
+		E47C491929134FCE00124DD2 /* ResourceRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47C491829134FCE00124DD2 /* ResourceRequest.swift */; };
+		E4A13FDB2916EEB400A839E9 /* AcronymRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A13FDA2916EEB400A839E9 /* AcronymRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		D2A5F20A1F4A9144005CD714 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2A5F20F1F4A9144005CD714 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2A5F2201F4A96D0005CD714 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E47C491829134FCE00124DD2 /* ResourceRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceRequest.swift; sourceTree = "<group>"; };
+		E4A13FDA2916EEB400A839E9 /* AcronymRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcronymRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,9 +73,9 @@
 			isa = PBXGroup;
 			children = (
 				23FBBD8820669D1B00DBFA59 /* Acronym.swift */,
-				23FBBD8A20669D3300DBFA59 /* User.swift */,
 				23FBBD8C20669D4F00DBFA59 /* Category.swift */,
 				2323AF7624BDF52600D2E1B6 /* CreateAcronymData.swift */,
+				23FBBD8A20669D3300DBFA59 /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -95,9 +99,11 @@
 		23FBBD8F20669D9A00DBFA59 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				2323AF7224B8B82100D2E1B6 /* ResourceRequestError.swift */,
-				23FBBD9020669DAD00DBFA59 /* ErrorPresenter.swift */,
 				2323AF7824BDF57700D2E1B6 /* AddToCategoryError.swift */,
+				23FBBD9020669DAD00DBFA59 /* ErrorPresenter.swift */,
+				E47C491829134FCE00124DD2 /* ResourceRequest.swift */,
+				2323AF7224B8B82100D2E1B6 /* ResourceRequestError.swift */,
+				E4A13FDA2916EEB400A839E9 /* AcronymRequest.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -150,7 +156,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2A5F2121F4A9144005CD714 /* Build configuration list for PBXNativeTarget "TILiOS" */;
 			buildPhases = (
-				2323AF6D24B7811400D2E1B6 /* SwiftLint */,
 				D2A5F1FC1F4A9144005CD714 /* Sources */,
 				D2A5F1FD1F4A9144005CD714 /* Frameworks */,
 				D2A5F1FE1F4A9144005CD714 /* Resources */,
@@ -211,27 +216,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		2323AF6D24B7811400D2E1B6 /* SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = SwiftLint;
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if [ -f ~/com.raywenderlich.swiftlint.yml ]; then\n  if which swiftlint >/dev/null; then\n    swiftlint --config ~/com.raywenderlich.swiftlint.yml\n  fi\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		D2A5F1FC1F4A9144005CD714 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -250,7 +234,9 @@
 				2323AF7724BDF52600D2E1B6 /* CreateAcronymData.swift in Sources */,
 				23FBBD9B2066AFAE00DBFA59 /* SelectUserTableViewController.swift in Sources */,
 				2323AF7324B8B82100D2E1B6 /* ResourceRequestError.swift in Sources */,
+				E47C491929134FCE00124DD2 /* ResourceRequest.swift in Sources */,
 				23FBBD842066980600DBFA59 /* UsersTableViewController.swift in Sources */,
+				E4A13FDB2916EEB400A839E9 /* AcronymRequest.swift in Sources */,
 				23FBBD862066982500DBFA59 /* CategoriesTableViewController.swift in Sources */,
 				23FBBD8D20669D4F00DBFA59 /* Category.swift in Sources */,
 				23FBBD972066ADCB00DBFA59 /* AcronymsDetailTableViewController.swift in Sources */,
@@ -389,10 +375,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = L5X28646AN;
 				INFOPLIST_FILE = "$(SRCROOT)/TILiOS/Project Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.raywenderlich.TILiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pvmodin.TILiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -404,10 +390,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = L5X28646AN;
 				INFOPLIST_FILE = "$(SRCROOT)/TILiOS/Project Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.raywenderlich.TILiOS;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pvmodin.TILiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
