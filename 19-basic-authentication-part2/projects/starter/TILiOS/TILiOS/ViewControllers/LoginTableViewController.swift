@@ -30,7 +30,7 @@ class LoginTableViewController: UITableViewController {
 					appDelegate?.window?.rootViewController = UIStoryboard(name: "Main", bundle: Bundle.main).instantiateInitialViewController()
 				}
 			case .failure:
-				let message = "Could not log in. Check your credentials and try againn"
+				let message = "Could not log in. Check your credentials and try again"
 				ErrorPresenter.showError(message: message, on: self)
 			}
 		}
