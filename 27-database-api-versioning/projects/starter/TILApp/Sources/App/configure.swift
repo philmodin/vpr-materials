@@ -38,7 +38,13 @@ public func configure(_ app: Application) throws {
 	app.migrations.add(CreateAcronymCategoryPivot())
 	app.migrations.add(CreateToken())
 	app.migrations.add(AddTwitterURLToUser())
-	app.migrations.add(CreateAdminUser())
+	switch app.environment {
+	case .development, .testing:
+		app.migrations.add(CreateAdminUser())
+	default:
+		break
+	}
+	app.migrations.add(MakeCategoriesUnique())
 	
 	app.logger.logLevel = .debug
 	
