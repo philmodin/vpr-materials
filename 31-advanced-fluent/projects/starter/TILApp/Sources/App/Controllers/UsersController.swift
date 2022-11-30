@@ -1,4 +1,4 @@
-
+import Fluent
 import Vapor
 
 struct UsersController: RouteCollection {
@@ -16,6 +16,8 @@ struct UsersController: RouteCollection {
 		let tokenAuthGroup = usersRoute.grouped(tokenAuthMiddleware, guardAuthMiddleware)
 		tokenAuthGroup.post(use: createHandler)
 		tokenAuthGroup.delete(":userID", use: deleteHandler)
+		tokenAuthGroup.post(":userID", "restore", use: restoreHandler)
+		tokenAuthGroup.delete(":userID", "force", use: forceDeleteHandler)
 	}
 	
 	func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
@@ -49,6 +51,27 @@ struct UsersController: RouteCollection {
 			.unwrap(or: Abort(.notFound))
 			.flatMap { user in
 				user.delete(on: req.db).transform(to: .noContent)
+			}
+	}
+	
+	func restoreHandler(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+		let userID = try req.parameters.require("userID", as: UUID.self)
+		return User.query(on: req.db)
+			.withDeleted()
+			.filter(\.$id == userID)
+			.first()
+			.unwrap(or: Abort(.notFound))
+			.flatMap { user in
+				user.restore(on: req.db).transform(to: .ok)
+			}
+	}
+	
+	func forceDeleteHandler(_ req: Request) -> EventLoopFuture<HTTPStatus> {
+		User.find(req.parameters.get("userID"), on: req.db)
+			.unwrap(or: Abort(.notFound))
+			.flatMap { user in
+				user.delete(force: true, on: req.db)
+					.transform(to: .noContent)
 			}
 	}
 }
