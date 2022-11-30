@@ -15,6 +15,7 @@ struct UsersController: RouteCollection {
 		let guardAuthMiddleware = User.guardMiddleware()
 		let tokenAuthGroup = usersRoute.grouped(tokenAuthMiddleware, guardAuthMiddleware)
 		tokenAuthGroup.post(use: createHandler)
+		tokenAuthGroup.delete(":userID", use: deleteHandler)
 	}
 	
 	func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
@@ -41,5 +42,13 @@ struct UsersController: RouteCollection {
 		let user = try req.auth.require(User.self)
 		let token = try Token.generate(for: user)
 		return token.save(on: req.db).map { token }
+	}
+	
+	func deleteHandler(_ req: Request) -> EventLoopFuture<HTTPStatus> {
+		User.find(req.parameters.get("userID"), on: req.db)
+			.unwrap(or: Abort(.notFound))
+			.flatMap { user in
+				user.delete(on: req.db).transform(to: .noContent)
+			}
 	}
 }
