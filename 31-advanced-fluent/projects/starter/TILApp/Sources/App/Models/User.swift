@@ -3,80 +3,84 @@ import Fluent
 import Vapor
 
 final class User: Model, Content {
-  static let schema = "users"
-  
-  @ID
-  var id: UUID?
-  
-  @Field(key: "name")
-  var name: String
-  
-  @Field(key: "username")
-  var username: String
-
-  @Field(key: "password")
-  var password: String
-  
-  @Children(for: \.$user)
-  var acronyms: [Acronym]
+	static let schema = "users"
+	
+	@ID
+	var id: UUID?
+	
+	@Field(key: "name")
+	var name: String
+	
+	@Field(key: "username")
+	var username: String
+	
+	@Field(key: "password")
+	var password: String
+	
+	@Children(for: \.$user)
+	var acronyms: [Acronym]
 	
 	@Timestamp(key: "deleted_at", on: .delete)
 	var deletedAt: Date?
-  
-  init() {}
-  
-  init(id: UUID? = nil, name: String, username: String, password: String) {
-    self.name = name
-    self.username = username
-    self.password = password
-  }
-
-  final class Public: Content {
-    var id: UUID?
-    var name: String
-    var username: String
-
-    init(id: UUID?, name: String, username: String) {
-      self.id = id
-      self.name = name
-      self.username = username
-    }
-  }
+	
+	@Enum(key: "userType")
+	var userType: UserType
+	
+	init() {}
+	
+	init(id: UUID? = nil, name: String, username: String, password: String, userType: UserType = .standard) {
+		self.name = name
+		self.username = username
+		self.password = password
+		self.userType = userType
+	}
+	
+	final class Public: Content {
+		var id: UUID?
+		var name: String
+		var username: String
+		
+		init(id: UUID?, name: String, username: String) {
+			self.id = id
+			self.name = name
+			self.username = username
+		}
+	}
 }
 
 extension User {
-  func convertToPublic() -> User.Public {
-    return User.Public(id: id, name: name, username: username)
-  }
+	func convertToPublic() -> User.Public {
+		return User.Public(id: id, name: name, username: username)
+	}
 }
 
 extension EventLoopFuture where Value: User {
-  func convertToPublic() -> EventLoopFuture<User.Public> {
-    return self.map { user in
-      return user.convertToPublic()
-    }
-  }
+	func convertToPublic() -> EventLoopFuture<User.Public> {
+		return self.map { user in
+			return user.convertToPublic()
+		}
+	}
 }
 
 extension Collection where Element: User {
-  func convertToPublic() -> [User.Public] {
-    return self.map { $0.convertToPublic() }
-  }
+	func convertToPublic() -> [User.Public] {
+		return self.map { $0.convertToPublic() }
+	}
 }
 
 extension EventLoopFuture where Value == Array<User> {
-  func convertToPublic() -> EventLoopFuture<[User.Public]> {
-    return self.map { $0.convertToPublic() }
-  }
+	func convertToPublic() -> EventLoopFuture<[User.Public]> {
+		return self.map { $0.convertToPublic() }
+	}
 }
 
 extension User: ModelAuthenticatable {
-  static let usernameKey = \User.$username
-  static let passwordHashKey = \User.$password
-
-  func verify(password: String) throws -> Bool {
-    try Bcrypt.verify(password, created: self.password)
-  }
+	static let usernameKey = \User.$username
+	static let passwordHashKey = \User.$password
+	
+	func verify(password: String) throws -> Bool {
+		try Bcrypt.verify(password, created: self.password)
+	}
 }
 
 extension User: ModelSessionAuthenticatable {}

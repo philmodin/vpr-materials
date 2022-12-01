@@ -46,8 +46,12 @@ struct UsersController: RouteCollection {
 		return token.save(on: req.db).map { token }
 	}
 	
-	func deleteHandler(_ req: Request) -> EventLoopFuture<HTTPStatus> {
-		User.find(req.parameters.get("userID"), on: req.db)
+	func deleteHandler(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+		let requestUser = try req.auth.require(User.self)
+		guard requestUser.userType == .admin else {
+			throw Abort(.forbidden)
+		}
+		return User.find(req.parameters.get("userID"), on: req.db)
 			.unwrap(or: Abort(.notFound))
 			.flatMap { user in
 				user.delete(on: req.db).transform(to: .noContent)
@@ -55,6 +59,10 @@ struct UsersController: RouteCollection {
 	}
 	
 	func restoreHandler(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+		let requestUser = try req.auth.require(User.self)
+		guard requestUser.userType == .admin else {
+			throw Abort(.forbidden)
+		}
 		let userID = try req.parameters.require("userID", as: UUID.self)
 		return User.query(on: req.db)
 			.withDeleted()
@@ -66,8 +74,12 @@ struct UsersController: RouteCollection {
 			}
 	}
 	
-	func forceDeleteHandler(_ req: Request) -> EventLoopFuture<HTTPStatus> {
-		User.find(req.parameters.get("userID"), on: req.db)
+	func forceDeleteHandler(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
+		let requestUser = try req.auth.require(User.self)
+		guard requestUser.userType == .admin else {
+			throw Abort(.forbidden)
+		}
+		return User.find(req.parameters.get("userID"), on: req.db)
 			.unwrap(or: Abort(.notFound))
 			.flatMap { user in
 				user.delete(force: true, on: req.db)
